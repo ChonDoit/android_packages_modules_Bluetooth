@@ -207,8 +207,10 @@ struct HciLayer::impl {
 
     bool is_vendor_specific = static_cast<int>(op_code) & (0x3f << 10);
     CommandStatusView status_view = CommandStatusView::Create(event);
-    if (is_vendor_specific && (is_status && !command_queue_.front().waiting_for_status_) &&
-        (status_view.IsValid() && status_view.GetStatus() == ErrorCode::UNKNOWN_HCI_COMMAND)) {
+    if ((is_vendor_specific && (is_status && !command_queue_.front().waiting_for_status_) &&
+        (status_view.IsValid() && status_view.GetStatus() == ErrorCode::UNKNOWN_HCI_COMMAND)) ||
+        ((is_status && !command_queue_.front().waiting_for_status_) &&
+        (status_view.IsValid() && status_view.GetStatus() == ErrorCode::UNSUPPORTED_REMOTE_OR_LMP_FEATURE))) {
       // If this is a command status of a vendor specific command, and command complete is expected,
       // we can't treat this as hard failure since we have no way of probing this lack of support at
       // earlier time. Instead we let the command complete handler handle a empty Command Complete
