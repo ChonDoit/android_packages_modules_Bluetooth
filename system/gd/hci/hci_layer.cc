@@ -30,6 +30,8 @@
 #include "os/queue.h"
 #include "osi/include/stack_power_telemetry.h"
 #include "packet/packet_builder.h"
+#include "packet/raw_builder.h"
+
 #include "storage/storage_module.h"
 
 namespace bluetooth {
